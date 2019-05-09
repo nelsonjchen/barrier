@@ -6,6 +6,6 @@ Write-Output 'Starting QT Installer'
 Start-Process qt.exe -ArgumentList '--verbose --script azure-pipelines/qtifwsilent.qs' -NoNewWindow -Wait 
 Write-Output 'Installed QT Installer' 
 Remove-Item qt.exe -Force 
-Remove-Item Qt\MaintenanceTool.exe -Force 
+Remove-Item $Env:QT_INSTALL_DIR\MaintenanceTool.exe -Force 
 Write-Output 'Deleted Maintenance Tooling' 
 
