@@ -12,26 +12,31 @@ jobs:
     vmImage: 'vs2017-win2016'
   steps:
     - task: PowerShell@2
-      name: Download Bonjour SDK-like
-      condition: ne(variables['CacheRestored'], 'true')
+      displayName: Download Bonjour SDK-like
       inputs:
         filePath: azure-pipelines/download_install_bonjour_sdk_like.ps1
     - task: 1ESLighthouseEng.PipelineArtifactCaching.RestoreCacheV1.RestoreCache@1
-      name: Restore QT Cache, if available
+      displayName: Restore QT Cache, if available
       inputs:
         keyfile: 'azure-pipelines/download_install_qt.ps1, azure-pipelines/qtifwsilent.qs'
         targetfolder: 'deps/Qt'
         vstsFeed: '$(ArtifactFeed)'
     - task: PowerShell@2
-      name: Installing QT
+      displayName: Installing QT
       condition: ne(variables['CacheRestored'], 'true')
       inputs:
         filePath: azure-pipelines/download_install_qt.ps1
     - task: 1ESLighthouseEng.PipelineArtifactCaching.SaveCacheV1.SaveCache@1
-      name: Saving QT Cache
+      displayName: Saving QT Cache
       inputs:
         keyfile: 'azure-pipelines/download_install_qt.ps1, azure-pipelines/qtifwsilent.qs'
         targetfolder: 'deps/Qt'
         vstsFeed: '$(ArtifactFeed)'
         condition: and(succeeded(), ne(variables['CacheRestored'], 'true'))
-    
+    - powershell: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
+      displayName: Layering Azure Pipeline's build_env.bat
+    - task: BatchScript@1
+      displayName: clean_build.bat
+      inputs:
+        filename: clean_build.bat
+      
