@@ -27,3 +27,7 @@ CMakeCache.txt
 /rpm
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+# VS Code Directory
+.vscode/
+# Transient in-project-directory dependencies
+/deps/

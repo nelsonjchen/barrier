@@ -1,0 +1,28 @@
+trigger:
+  tags:
+    include:
+    - '*'
+  branches:
+    include:
+    - '*'
+
+jobs:
+- job: Build
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+    - task: 1ESLighthouseEng.PipelineArtifactCaching.RestoreCacheV1.RestoreCache@1
+      inputs:
+        keyfile: 'azure-pipelines/download_install_qt.ps1, azure-pipelines/qtifwsilent.qs'
+        targetfolder: 'deps/Qt'
+        vstsFeed: '$(ArtifactFeed)'
+    - task: PowerShell@2
+      condition: ne(variables['CacheRestored'], 'true')
+      inputs:
+        filePath: azure-pipelines/download_install_qt.ps1
+    - task: 1ESLighthouseEng.PipelineArtifactCaching.SaveCacheV1.SaveCache@1
+      inputs:
+        keyfile: 'azure-pipelines/download_install_qt.ps1, azure-pipelines/qtifwsilent.qs'
+        targetfolder: 'deps/Qt'
+        vstsFeed: '$(ArtifactFeed)'
+        condition: and(succeeded(), ne(variables['CacheRestored'], 'true'))
