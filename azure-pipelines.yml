@@ -35,8 +35,6 @@ jobs:
         condition: and(succeeded(), ne(variables['CacheRestored'], 'true'))
     - powershell: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
       displayName: Layering Azure Pipeline's build_env.bat
-    - task: BatchScript@1
+    - script: |
+          call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && clean_build.bat
       displayName: clean_build.bat
-      inputs:
-        filename: clean_build.bat
-      
