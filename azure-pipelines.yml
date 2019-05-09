@@ -11,6 +11,10 @@ jobs:
   pool:
     vmImage: 'vs2017-win2016'
   steps:
+    - task: PowerShell@2
+      condition: ne(variables['CacheRestored'], 'true')
+      inputs:
+        filePath: azure-pipelines/download_install_bonjour_sdk_like.ps1
     - task: 1ESLighthouseEng.PipelineArtifactCaching.RestoreCacheV1.RestoreCache@1
       inputs:
         keyfile: 'azure-pipelines/download_install_qt.ps1, azure-pipelines/qtifwsilent.qs'
@@ -26,3 +30,4 @@ jobs:
         targetfolder: 'deps/Qt'
         vstsFeed: '$(ArtifactFeed)'
         condition: and(succeeded(), ne(variables['CacheRestored'], 'true'))
+    
