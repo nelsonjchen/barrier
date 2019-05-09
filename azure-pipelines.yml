@@ -19,7 +19,7 @@ jobs:
       displayName: Restore QT Cache, if available
       inputs:
         keyfile: 'azure-pipelines/download_install_qt.ps1, azure-pipelines/qtifwsilent.qs'
-        targetfolder: 'deps/Qt'
+        targetfolder: 'deps/Qt/Qt5.12.3/5.12.3'
         vstsFeed: '$(ArtifactFeed)'
     - task: PowerShell@2
       displayName: Installing QT
@@ -30,7 +30,7 @@ jobs:
       displayName: Saving QT Cache
       inputs:
         keyfile: 'azure-pipelines/download_install_qt.ps1, azure-pipelines/qtifwsilent.qs'
-        targetfolder: 'deps/Qt'
+        targetfolder: 'deps/Qt/Qt5.12.3/5.12.3'
         vstsFeed: '$(ArtifactFeed)'
         condition: and(succeeded(), ne(variables['CacheRestored'], 'true'))
     - powershell: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
