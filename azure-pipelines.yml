@@ -65,10 +65,10 @@ jobs:
       condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
     - task: PublishBuildArtifacts@1
       displayName: Publish Release Installer
+      condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
       inputs:
         pathtoPublish: build\installer-inno\bin
         artifactName: Release Installer
-        condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
 
 - job: LinuxBuild
   displayName: Linux Build
