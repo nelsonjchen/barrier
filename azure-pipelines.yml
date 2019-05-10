@@ -49,6 +49,17 @@ jobs:
     - script: |
           call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && clean_build.bat
       displayName: Clean Build
+    - task: ArchiveFiles@2
+      displayName: Archive Completed Build Directory
+      inputs:
+        rootFolderOrFile: build\bin\$(CI_ENV_BUILD_TYPE)\
+        includeRootFolder: true
+        archiveFile: $(Build.ArtifactStagingDirectory)\$(CI_ENV_BUILD_TYPE).zip
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Completed Build Directory Archive Build Artifact
+      inputs:
+        pathtoPublish: $(Build.ArtifactStagingDirectory)\$(CI_ENV_BUILD_TYPE).zip
+        artifactName: $(CI_ENV_BUILD_TYPE)
     - script: build_installer.bat
       displayName: Build Installer
       condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
