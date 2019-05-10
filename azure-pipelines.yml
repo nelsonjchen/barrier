@@ -6,11 +6,20 @@ trigger:
     include:
     - '*'
 
+
+
 jobs:
-- job: Build
+- job: Windows Build
   pool:
     vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      Debug:
+        CI_ENV_BUILD_TYPE: Debug
+      Release with Release Installer:
+        CI_ENV_BUILD_TYPE: Release
   steps:
+    # Gather Dependencies
     - task: PowerShell@2
       displayName: Download Bonjour SDK-like
       inputs:
@@ -34,9 +43,14 @@ jobs:
         vstsFeed: '$(ArtifactFeed)'
         condition: and(succeeded(), ne(variables['CacheRestored'], 'true'))
     - script: choco install innosetup --version 5.6.1
-      displayName: Install Inno Setup
+      displayName: Install Inno Setup for Release
+      condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
+    # Build time!
     - powershell: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
       displayName: Layering Azure Pipeline's build_env.bat
     - script: |
           call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\vsdevcmd" -arch=x64 && clean_build.bat
-      displayName: clean_build.bat    
+      displayName: Clean Build
+    - script: build_installer.bat
+      displayName: Build Installer
+      condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
