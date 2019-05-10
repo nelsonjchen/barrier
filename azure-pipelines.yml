@@ -9,7 +9,8 @@ trigger:
 
 
 jobs:
-- job: Windows Build
+- job: WinBuild
+  displayName: Windows Build
   pool:
     vmImage: 'vs2017-win2016'
   strategy:
@@ -42,9 +43,6 @@ jobs:
         targetfolder: 'deps/Qt/Qt5.12.3/5.12.3'
         vstsFeed: '$(ArtifactFeed)'
         condition: and(succeeded(), ne(variables['CacheRestored'], 'true'))
-    - script: choco install innosetup --version 5.6.1
-      displayName: Install Inno Setup for Release
-      condition: eq(variables['CI_ENV_BUILD_TYPE'], 'Release')
     # Build time!
     - powershell: Copy-Item azure-pipelines\build_env_tmpl.bat build_env.bat
       displayName: Layering Azure Pipeline's build_env.bat
