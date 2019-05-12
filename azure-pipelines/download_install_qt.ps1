@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $qli_install_version = '2019.05.12.3'
-$qt_version = '5.12.3'
+$qt_version = '5.12.4'
 
 New-Item -Force -ItemType Directory -Path ".\deps\"
 
